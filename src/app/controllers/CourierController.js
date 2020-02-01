@@ -1,12 +1,12 @@
 import * as Yup from 'yup';
-import Plan from '../models/Plan';
+import Courier from '../models/Courier';
 
-class PlanController {
+class CourierController {
   async store(req, res) {
     const schema = Yup.object().shape({
-      title: Yup.string().required(),
-      duration: Yup.number().required(),
-      price: Yup.number().required(),
+      name: Yup.string().required(),
+      email: Yup.string().required(),
+      avatar_id: Yup.string().required(),
     });
 
     if (!req.header) {
@@ -17,20 +17,19 @@ class PlanController {
       return res.status(400).json({ error: 'Validation failed' });
     }
 
-    const planExists = await Plan.findOne({
-      where: { title: req.body.title },
+    const courierExists = await Courier.findOne({
+      where: { email: req.body.email },
     });
 
-    if (planExists) {
-      return res.status(400).json({ error: 'Plan already exists' });
+    if (courierExists) {
+      return res.status(400).json({ error: 'Courier already exists' });
     }
 
-    const { title, duration, price } = await Plan.create(req.body);
+    const { name, email } = await Courier.create(req.body);
 
     return res.json({
-      title,
-      duration,
-      price,
+      name,
+      email,
     });
   }
 
@@ -53,4 +52,4 @@ class PlanController {
   }
 }
 
-export default new PlanController();
+export default new CourierController();

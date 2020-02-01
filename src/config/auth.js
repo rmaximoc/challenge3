@@ -1,4 +1,4 @@
 export default {
-  secret: 'gympoint',
+  secret: 'fastfeet',
   expiresIn: '7d',
 };

@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
-import PlanController from './app/controllers/PlanController';
-import StudentController from './app/controllers/StudentController';
+import CourierController from './app/controllers/CourierController';
+import RecipientController from './app/controllers/RecipientController';
 import authMiddleware from './app/middlewares/auth';
 
 const routes = new Router();
@@ -12,11 +12,11 @@ routes.post('/sessions', SessionController.store);
 
 routes.use(authMiddleware);
 
-routes.post('/students', StudentController.store);
-routes.post('/plan', PlanController.store);
-routes.get('/plan', PlanController.list);
-routes.put('/plan', PlanController.update);
-routes.delete('/plan', PlanController.delete);
+routes.post('/recipient', RecipientController.store);
+routes.post('/couriers', CourierController.store);
+routes.get('/couriers', CourierController.list);
+routes.put('/couriers', CourierController.update);
+routes.delete('/couriers', CourierController.delete);
 routes.put('/users', UserController.update);
 
 export default routes;
