@@ -25,9 +25,8 @@ class RecipientsController {
       where: { recipient_name: req.body.recipient_name },
     });
 
-    if (userExists) {
+    if (userExists)
       return res.status(400).json({ error: 'Recipient already exists' });
-    }
 
     const {
       id,
@@ -69,17 +68,19 @@ class RecipientsController {
 
     const { recipient_name } = req.body;
 
-    const user = await Recipient.findByPk(req.userId);
+    const recipient = await Recipient.findByPk(req.recipientId);
 
-    if (recipient_name !== user.recipient_name) {
-      const userExists = await Recipient.findOne({ where: { recipient_name } });
+    if (recipient_name !== recipient.recipient_name) {
+      const recipientExists = await Recipient.findOne({
+        where: { recipient_name },
+      });
 
-      if (userExists) {
+      if (recipientExists) {
         return res.status(400).json({ error: 'Recipient already exists' });
       }
     }
 
-    const { id, name } = await user.update(req.body);
+    const { id, name } = await Recipient.update(req.body);
 
     return res.json({ id, name, recipient_name });
   }

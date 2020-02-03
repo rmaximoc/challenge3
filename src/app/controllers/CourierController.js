@@ -5,7 +5,7 @@ class CourierController {
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      email: Yup.string().required(),
+      email: Yup.string().email(),
       avatar_id: Yup.string().required(),
     });
 
@@ -34,20 +34,65 @@ class CourierController {
   }
 
   async list(req, res) {
+    const courierExists = await Courier.findOne({
+      where: { email: req.body.email },
+    });
+
+    if (!courierExists)
+      return res.status(400).json({ error: 'Courier does not exists' });
+
     return res.json({
-      list: 'lista de usuarios',
+      courier: courierExists,
     });
   }
 
   async update(req, res) {
-    return res.json({
-      update: 'atualiza usuarios',
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string().email(),
     });
+
+    if (!req.header) {
+      return res.status(400).json({ error: "You're not authorized to do it" });
+    }
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation failed' });
+    }
+
+    const { id, name, email } = req.body;
+
+    const courier = await Courier.findByPk(id);
+
+    if (email !== courier.email) {
+      const userExists = await Courier.findOne({
+        where: { email },
+      });
+
+      if (userExists) {
+        return res.status(400).json({ error: 'Courier exists' });
+      }
+    }
+
+    await Courier.update({ email, name }, { where: { id } });
+
+    return res.json(courier);
   }
 
   async delete(req, res) {
+    const courierExists = await Courier.findOne({
+      where: { email: req.body.email },
+    });
+
+    if (!courierExists)
+      return res.status(400).json({ error: 'Courier does not exists' });
+
+    Courier.destroy({
+      where: { email: req.body.email },
+    });
+
     return res.json({
-      delete: 'deleta usuarios',
+      message: 'Courier has been deleted',
     });
   }
 }
