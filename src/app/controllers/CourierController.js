@@ -6,7 +6,6 @@ class CourierController {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().email(),
-      avatar_id: Yup.string().required(),
     });
 
     if (!req.header) {

@@ -6,7 +6,6 @@ class Courier extends Model {
       {
         name: Sequelize.STRING,
         email: Sequelize.STRING,
-        avatar_id: Sequelize.STRING,
       },
       {
         sequelize,
